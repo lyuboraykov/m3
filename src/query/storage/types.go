@@ -28,6 +28,7 @@ import (
 	"github.com/m3db/m3/src/query/block"
 	"github.com/m3db/m3/src/query/models"
 	"github.com/m3db/m3/src/query/ts"
+	"github.com/m3db/m3/src/x/cost"
 	xtime "github.com/m3db/m3x/time"
 )
 
@@ -78,13 +79,15 @@ func (q *FetchQuery) String() string {
 
 // FetchOptions represents the options for fetch query
 type FetchOptions struct {
-	Limit int
+	Limit    int
+	Enforcer cost.EnforcerIF
 }
 
 // NewFetchOptions creates a new fetch options.
 func NewFetchOptions() *FetchOptions {
 	return &FetchOptions{
-		Limit: 0,
+		Limit:    0,
+		Enforcer: cost.NoopEnforcer(),
 	}
 }
 

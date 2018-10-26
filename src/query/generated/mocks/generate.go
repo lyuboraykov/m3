@@ -21,4 +21,7 @@
 // mockgen rules for generating mocks for exported interfaces (reflection mode).
 //go:generate sh -c "mockgen -package=downsample $PACKAGE/src/cmd/services/m3coordinator/downsample Downsampler,MetricsAppender,SamplesAppender | genclean -pkg $PACKAGE/src/cmd/services/m3coordinator/downsample -out $GOPATH/src/$PACKAGE/src/cmd/services/m3coordinator/downsample/downsample_mock.go"
 
+// mockgen rules for generating mocks for unexported interfaces (file mode)
+//go:generate sh -c "mockgen -package=cost -destination=$GOPATH/src/$PACKAGE/src/query/cost/cost_mock.go $PACKAGE/src/query/cost PerQueryEnforcer,PerQueryEnforcerFactory"
+
 package mocks

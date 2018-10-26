@@ -17,39 +17,21 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+//
 
 package models
 
-import (
-	"time"
-)
+import "github.com/m3db/m3/src/x/cost"
 
-// LookbackDelta determines the time since the last sample after which a time
-// series is considered stale (inclusive).
-// TODO: Make this configurable
-var LookbackDelta = time.Minute
-
-// RequestParams represents the params from the request
-type RequestParams struct {
-	Start time.Time
-	End   time.Time
-	// Now captures the current time and fixes it throughout the request, we may let people override it in the future
-	Now        time.Time
-	Timeout    time.Duration
-	Step       time.Duration
-	Query      string
-	Debug      bool
-	IncludeEnd bool
-
-	// xxx cleanup
-	NoReport bool
+// QueryContext provides all external state needed to execute and track a query. It acts as a hook back into the
+// execution engine for things like cost accounting.
+type QueryContext struct {
+	Enforcer cost.EnforcerIF
 }
 
-// ExclusiveEnd returns the end exclusive
-func (r RequestParams) ExclusiveEnd() time.Time {
-	if r.IncludeEnd {
-		return r.End.Add(r.Step)
+// NewQueryContext constructs a QueryContext using the given Enforcer to enforce per query limits.
+func NewQueryContext(enforcer cost.EnforcerIF) *QueryContext {
+	return &QueryContext{
+		Enforcer: enforcer,
 	}
-
-	return r.End
 }

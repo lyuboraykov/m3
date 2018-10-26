@@ -35,6 +35,7 @@ import (
 	"github.com/m3db/m3/src/query/models"
 	"github.com/m3db/m3/src/query/storage"
 	"github.com/m3db/m3/src/query/ts"
+	"github.com/m3db/m3/src/x/cost"
 	"github.com/m3db/m3x/ident"
 	xsync "github.com/m3db/m3x/sync"
 )
@@ -85,7 +86,22 @@ func (s *m3storage) Fetch(
 		return nil, err
 	}
 
-	return storage.SeriesIteratorsToFetchResult(raw, s.readWorkerPool, false, s.tagOptions)
+	iters := raw.Iters()
+	accountedIters := make([]encoding.SeriesIterator, len(iters))
+
+	enforcer := options.Enforcer
+	if enforcer == nil {
+		enforcer = cost.NoopEnforcer()
+	}
+	for i, iter := range iters {
+		accountedIters[i] = NewAccountedSeriesIter(iter, enforcer)
+	}
+
+	return storage.SeriesIteratorsToFetchResult(
+		encoding.NewSeriesIterators(accountedIters, raw.Pool()),
+		s.readWorkerPool,
+		false,
+		s.tagOptions)
 }
 
 func (s *m3storage) FetchBlocks(

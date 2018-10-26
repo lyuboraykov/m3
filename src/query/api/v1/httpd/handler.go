@@ -131,7 +131,7 @@ func (h *Handler) RegisterRoutes() error {
 		promRemoteWriteHandler.ServeHTTP,
 	).Methods(remote.PromWriteHTTPMethod)
 	h.Router.HandleFunc(native.PromReadURL,
-		logged(native.NewPromReadHandler(h.engine, h.tagOptions, &h.config.Limits)).ServeHTTP,
+		logged(native.NewPromReadHandler(h.engine, h.tagOptions, &h.config.Limits, h.scope)).ServeHTTP,
 	).Methods(native.PromReadHTTPMethod)
 
 	// Native M3 search and write endpoints
