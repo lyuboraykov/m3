@@ -112,16 +112,16 @@ func (mr *MockDatabaseSeriesMockRecorder) FetchBlocksMetadata(arg0, arg1, arg2, 
 }
 
 // Flush mocks base method
-func (m *MockDatabaseSeries) Flush(arg0 context.Context, arg1 time.Time, arg2 persist.DataFn) (FlushOutcome, error) {
-	ret := m.ctrl.Call(m, "Flush", arg0, arg1, arg2)
+func (m *MockDatabaseSeries) Flush(arg0 context.Context, arg1 time.Time, arg2 persist.DataFn, arg3 int) (FlushOutcome, error) {
+	ret := m.ctrl.Call(m, "Flush", arg0, arg1, arg2, arg3)
 	ret0, _ := ret[0].(FlushOutcome)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Flush indicates an expected call of Flush
-func (mr *MockDatabaseSeriesMockRecorder) Flush(arg0, arg1, arg2 interface{}) *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Flush", reflect.TypeOf((*MockDatabaseSeries)(nil).Flush), arg0, arg1, arg2)
+func (mr *MockDatabaseSeriesMockRecorder) Flush(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Flush", reflect.TypeOf((*MockDatabaseSeries)(nil).Flush), arg0, arg1, arg2, arg3)
 }
 
 // ID mocks base method
@@ -253,15 +253,15 @@ func (mr *MockDatabaseSeriesMockRecorder) Tick() *gomock.Call {
 }
 
 // Write mocks base method
-func (m *MockDatabaseSeries) Write(arg0 context.Context, arg1 time.Time, arg2 float64, arg3 time0.Unit, arg4 []byte) error {
-	ret := m.ctrl.Call(m, "Write", arg0, arg1, arg2, arg3, arg4)
+func (m *MockDatabaseSeries) Write(arg0 context.Context, arg1 time.Time, arg2 WriteType, arg3 float64, arg4 time0.Unit, arg5 []byte) error {
+	ret := m.ctrl.Call(m, "Write", arg0, arg1, arg2, arg3, arg4, arg5)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Write indicates an expected call of Write
-func (mr *MockDatabaseSeriesMockRecorder) Write(arg0, arg1, arg2, arg3, arg4 interface{}) *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Write", reflect.TypeOf((*MockDatabaseSeries)(nil).Write), arg0, arg1, arg2, arg3, arg4)
+func (mr *MockDatabaseSeriesMockRecorder) Write(arg0, arg1, arg2, arg3, arg4, arg5 interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Write", reflect.TypeOf((*MockDatabaseSeries)(nil).Write), arg0, arg1, arg2, arg3, arg4, arg5)
 }
 
 // MockQueryableBlockRetriever is a mock of QueryableBlockRetriever interface
@@ -287,18 +287,6 @@ func (m *MockQueryableBlockRetriever) EXPECT() *MockQueryableBlockRetrieverMockR
 	return m.recorder
 }
 
-// BlockLastSuccess mocks base method
-func (m *MockQueryableBlockRetriever) BlockLastSuccess(arg0 time.Time) time.Time {
-	ret := m.ctrl.Call(m, "BlockLastSuccess", arg0)
-	ret0, _ := ret[0].(time.Time)
-	return ret0
-}
-
-// BlockLastSuccess indicates an expected call of BlockLastSuccess
-func (mr *MockQueryableBlockRetrieverMockRecorder) BlockLastSuccess(arg0 interface{}) *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BlockLastSuccess", reflect.TypeOf((*MockQueryableBlockRetriever)(nil).BlockLastSuccess), arg0)
-}
-
 // IsBlockRetrievable mocks base method
 func (m *MockQueryableBlockRetriever) IsBlockRetrievable(arg0 time.Time) bool {
 	ret := m.ctrl.Call(m, "IsBlockRetrievable", arg0)
@@ -309,6 +297,18 @@ func (m *MockQueryableBlockRetriever) IsBlockRetrievable(arg0 time.Time) bool {
 // IsBlockRetrievable indicates an expected call of IsBlockRetrievable
 func (mr *MockQueryableBlockRetrieverMockRecorder) IsBlockRetrievable(arg0 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsBlockRetrievable", reflect.TypeOf((*MockQueryableBlockRetriever)(nil).IsBlockRetrievable), arg0)
+}
+
+// RetrievableBlockVersion mocks base method
+func (m *MockQueryableBlockRetriever) RetrievableBlockVersion(arg0 time.Time) int {
+	ret := m.ctrl.Call(m, "RetrievableBlockVersion", arg0)
+	ret0, _ := ret[0].(int)
+	return ret0
+}
+
+// RetrievableBlockVersion indicates an expected call of RetrievableBlockVersion
+func (mr *MockQueryableBlockRetrieverMockRecorder) RetrievableBlockVersion(arg0 interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RetrievableBlockVersion", reflect.TypeOf((*MockQueryableBlockRetriever)(nil).RetrievableBlockVersion), arg0)
 }
 
 // Stream mocks base method

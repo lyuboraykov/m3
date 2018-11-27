@@ -222,26 +222,26 @@ func (mr *MockOptionsMockRecorder) BlockDataExpiryAfterNotAccessedPeriod() *gomo
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BlockDataExpiryAfterNotAccessedPeriod", reflect.TypeOf((*MockOptions)(nil).BlockDataExpiryAfterNotAccessedPeriod))
 }
 
-// SetOutOfOrderWritesEnabled mocks base method
-func (m *MockOptions) SetOutOfOrderWritesEnabled(value bool) Options {
-	ret := m.ctrl.Call(m, "SetOutOfOrderWritesEnabled", value)
+// SetColdWritesEnabled mocks base method
+func (m *MockOptions) SetColdWritesEnabled(value bool) Options {
+	ret := m.ctrl.Call(m, "SetColdWritesEnabled", value)
 	ret0, _ := ret[0].(Options)
 	return ret0
 }
 
-// SetOutOfOrderWritesEnabled indicates an expected call of SetOutOfOrderWritesEnabled
-func (mr *MockOptionsMockRecorder) SetOutOfOrderWritesEnabled(value interface{}) *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetOutOfOrderWritesEnabled", reflect.TypeOf((*MockOptions)(nil).SetOutOfOrderWritesEnabled), value)
+// SetColdWritesEnabled indicates an expected call of SetColdWritesEnabled
+func (mr *MockOptionsMockRecorder) SetColdWritesEnabled(value interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetColdWritesEnabled", reflect.TypeOf((*MockOptions)(nil).SetColdWritesEnabled), value)
 }
 
-// OutOfOrderWritesEnabled mocks base method
-func (m *MockOptions) OutOfOrderWritesEnabled() bool {
-	ret := m.ctrl.Call(m, "OutOfOrderWritesEnabled")
+// ColdWritesEnabled mocks base method
+func (m *MockOptions) ColdWritesEnabled() bool {
+	ret := m.ctrl.Call(m, "ColdWritesEnabled")
 	ret0, _ := ret[0].(bool)
 	return ret0
 }
 
-// OutOfOrderWritesEnabled indicates an expected call of OutOfOrderWritesEnabled
-func (mr *MockOptionsMockRecorder) OutOfOrderWritesEnabled() *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OutOfOrderWritesEnabled", reflect.TypeOf((*MockOptions)(nil).OutOfOrderWritesEnabled))
+// ColdWritesEnabled indicates an expected call of ColdWritesEnabled
+func (mr *MockOptionsMockRecorder) ColdWritesEnabled() *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ColdWritesEnabled", reflect.TypeOf((*MockOptions)(nil).ColdWritesEnabled))
 }

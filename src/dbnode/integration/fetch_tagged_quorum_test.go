@@ -297,6 +297,6 @@ func startAndWriteTagged(
 		require.NoError(t, n.startServer())
 		require.NoError(t, n.db.WriteTagged(ctx, testNamespaces[0], ident.StringID("quorumTest"),
 			ident.NewTagsIterator(ident.NewTags(ident.StringTag("foo", "bar"), ident.StringTag("boo", "baz"))),
-			n.getNowFn(), 42, xtime.Second, nil))
+			n.getNowFn(), n.getNowFn(), 42, xtime.Second, nil))
 	}
 }
