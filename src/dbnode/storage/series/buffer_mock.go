@@ -62,15 +62,15 @@ func (m *MockdatabaseBuffer) EXPECT() *MockdatabaseBufferMockRecorder {
 }
 
 // Write mocks base method
-func (m *MockdatabaseBuffer) Write(ctx context.Context, timestamp time.Time, wType WriteType, value float64, unit time0.Unit, annotation []byte) error {
-	ret := m.ctrl.Call(m, "Write", ctx, timestamp, wType, value, unit, annotation)
+func (m *MockdatabaseBuffer) Write(ctx context.Context, timestamp time.Time, value float64, unit time0.Unit, annotation []byte, wopts WriteOptions) error {
+	ret := m.ctrl.Call(m, "Write", ctx, timestamp, value, unit, annotation, wopts)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Write indicates an expected call of Write
-func (mr *MockdatabaseBufferMockRecorder) Write(ctx, timestamp, wType, value, unit, annotation interface{}) *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Write", reflect.TypeOf((*MockdatabaseBuffer)(nil).Write), ctx, timestamp, wType, value, unit, annotation)
+func (mr *MockdatabaseBufferMockRecorder) Write(ctx, timestamp, value, unit, annotation, wopts interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Write", reflect.TypeOf((*MockdatabaseBuffer)(nil).Write), ctx, timestamp, value, unit, annotation, wopts)
 }
 
 // Snapshot mocks base method

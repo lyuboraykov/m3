@@ -34,6 +34,7 @@ import (
 	"github.com/m3db/m3/src/dbnode/storage/block"
 	"github.com/m3db/m3/src/dbnode/storage/index"
 	"github.com/m3db/m3/src/dbnode/storage/namespace"
+	"github.com/m3db/m3/src/dbnode/storage/series"
 	"github.com/m3db/m3/src/dbnode/ts"
 	"github.com/m3db/m3/src/dbnode/x/xcounter"
 	"github.com/m3db/m3/src/dbnode/x/xio"
@@ -494,10 +495,10 @@ func (d *db) Write(
 	namespace ident.ID,
 	id ident.ID,
 	timestamp time.Time,
-	writeTime time.Time,
 	value float64,
 	unit xtime.Unit,
 	annotation []byte,
+	wopts series.WriteOptions,
 ) error {
 	n, err := d.namespaceFor(namespace)
 	if err != nil {
@@ -505,7 +506,7 @@ func (d *db) Write(
 		return err
 	}
 
-	series, err := n.Write(ctx, id, timestamp, writeTime, value, unit, annotation)
+	series, err := n.Write(ctx, id, timestamp, value, unit, annotation, wopts)
 	if err == commitlog.ErrCommitLogQueueFull {
 		d.errors.Record(1)
 	}
@@ -523,10 +524,10 @@ func (d *db) WriteTagged(
 	id ident.ID,
 	tags ident.TagIterator,
 	timestamp time.Time,
-	writeTime time.Time,
 	value float64,
 	unit xtime.Unit,
 	annotation []byte,
+	wopts series.WriteOptions,
 ) error {
 	n, err := d.namespaceFor(namespace)
 	if err != nil {
@@ -534,7 +535,7 @@ func (d *db) WriteTagged(
 		return err
 	}
 
-	series, err := n.WriteTagged(ctx, id, tags, timestamp, writeTime, value, unit, annotation)
+	series, err := n.WriteTagged(ctx, id, tags, timestamp, value, unit, annotation, wopts)
 	if err == commitlog.ErrCommitLogQueueFull {
 		d.errors.Record(1)
 	}
@@ -565,29 +566,29 @@ func (d *db) WriteBatch(
 	ctx context.Context,
 	namespace ident.ID,
 	writer ts.BatchWriter,
-	writeTime time.Time,
 	errHandler IndexedErrorHandler,
+	wopts series.WriteOptions,
 ) error {
-	return d.writeBatch(ctx, namespace, writer, writeTime, errHandler, false)
+	return d.writeBatch(ctx, namespace, writer, errHandler, false, wopts)
 }
 
 func (d *db) WriteTaggedBatch(
 	ctx context.Context,
 	namespace ident.ID,
 	writer ts.BatchWriter,
-	writeTime time.Time,
 	errHandler IndexedErrorHandler,
+	wopts series.WriteOptions,
 ) error {
-	return d.writeBatch(ctx, namespace, writer, writeTime, errHandler, true)
+	return d.writeBatch(ctx, namespace, writer, errHandler, true, wopts)
 }
 
 func (d *db) writeBatch(
 	ctx context.Context,
 	namespace ident.ID,
 	writer ts.BatchWriter,
-	writeTime time.Time,
 	errHandler IndexedErrorHandler,
 	tagged bool,
+	wopts series.WriteOptions,
 ) error {
 	writes, ok := writer.(ts.WriteBatch)
 	if !ok {
@@ -617,20 +618,20 @@ func (d *db) writeBatch(
 				write.Write.Series.ID,
 				write.TagIter,
 				write.Write.Datapoint.Timestamp,
-				writeTime,
 				write.Write.Datapoint.Value,
 				write.Write.Unit,
 				write.Write.Annotation,
+				wopts,
 			)
 		} else {
 			series, err = n.Write(
 				ctx,
 				write.Write.Series.ID,
 				write.Write.Datapoint.Timestamp,
-				writeTime,
 				write.Write.Datapoint.Value,
 				write.Write.Unit,
 				write.Write.Annotation,
+				wopts,
 			)
 		}
 
