@@ -159,20 +159,6 @@ func (mr *MockdatabaseBufferMockRecorder) Stats() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Stats", reflect.TypeOf((*MockdatabaseBuffer)(nil).Stats))
 }
 
-// MinMax mocks base method
-func (m *MockdatabaseBuffer) MinMax() (time.Time, time.Time, error) {
-	ret := m.ctrl.Call(m, "MinMax")
-	ret0, _ := ret[0].(time.Time)
-	ret1, _ := ret[1].(time.Time)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// MinMax indicates an expected call of MinMax
-func (mr *MockdatabaseBufferMockRecorder) MinMax() *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MinMax", reflect.TypeOf((*MockdatabaseBuffer)(nil).MinMax))
-}
-
 // Tick mocks base method
 func (m *MockdatabaseBuffer) Tick() bufferTickResult {
 	ret := m.ctrl.Call(m, "Tick")
