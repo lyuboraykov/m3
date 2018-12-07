@@ -774,7 +774,6 @@ func testDatabaseWriteBatch(t *testing.T, tagged bool) {
 			err:    errors.New("some-error"),
 		},
 	}
-	writeTime := time.Time{}
 
 	batchWriter, err := d.BatchWriter(namespace, 10)
 	require.NoError(t, err)
@@ -787,7 +786,7 @@ func testDatabaseWriteBatch(t *testing.T, tagged bool) {
 		if tagged {
 			batchWriter.AddTagged(i*2, ident.StringID(write.series), tagsIter, write.t, write.v, xtime.Second, nil)
 			ns.EXPECT().WriteTagged(ctx, ident.NewIDMatcher(write.series), gomock.Any(),
-				write.t, write.v, xtime.Second, nil, series.WriteOptions{WriteTime: writeTime}).Return(
+				write.t, write.v, xtime.Second, nil, series.WriteOptions{}).Return(
 				ts.Series{
 					ID:        ident.StringID(write.series + "-updated"),
 					Namespace: namespace,
@@ -796,7 +795,7 @@ func testDatabaseWriteBatch(t *testing.T, tagged bool) {
 		} else {
 			batchWriter.Add(i*2, ident.StringID(write.series), write.t, write.v, xtime.Second, nil)
 			ns.EXPECT().Write(ctx, ident.NewIDMatcher(write.series),
-				write.t, write.v, xtime.Second, nil, series.WriteOptions{WriteTime: writeTime}).Return(
+				write.t, write.v, xtime.Second, nil, series.WriteOptions{}).Return(
 				ts.Series{
 					ID:        ident.StringID(write.series + "-updated"),
 					Namespace: namespace,
@@ -809,10 +808,10 @@ func testDatabaseWriteBatch(t *testing.T, tagged bool) {
 	errHandler := &fakeIndexedErrorHandler{}
 	if tagged {
 		err = d.WriteTaggedBatch(ctx, namespace, batchWriter.(ts.WriteBatch),
-			errHandler, series.WriteOptions{WriteTime: writeTime})
+			errHandler, series.WriteOptions{})
 	} else {
 		err = d.WriteBatch(ctx, namespace, batchWriter.(ts.WriteBatch),
-			errHandler, series.WriteOptions{WriteTime: writeTime})
+			errHandler, series.WriteOptions{})
 	}
 
 	require.NoError(t, err)
