@@ -21,7 +21,6 @@
 package writer
 
 import (
-	"errors"
 	"math/rand"
 
 	"github.com/m3db/m3/src/aggregator/aggregator/handler/common"
@@ -34,10 +33,6 @@ import (
 	xerrors "github.com/m3db/m3x/errors"
 
 	"github.com/uber-go/tally"
-)
-
-var (
-	errWriterClosed = errors.New("writer is closed")
 )
 
 type shardedWriterMetrics struct {
@@ -102,9 +97,9 @@ func NewShardedWriter(
 		maxBufferSize:            opts.MaxBufferSize(),
 		bufferedEncoderPool:      opts.BufferedEncoderPool(),
 		encodingTimeSamplingRate: opts.EncodingTimeSamplingRate(),
-		rand:            rand.New(rand.NewSource(nowFn().UnixNano())),
-		encodersByShard: make([]msgpack.AggregatedEncoder, numShards),
-		metrics:         newShardedWriterMetrics(instrumentOpts.MetricsScope()),
+		rand:                     rand.New(rand.NewSource(nowFn().UnixNano())),
+		encodersByShard:          make([]msgpack.AggregatedEncoder, numShards),
+		metrics:                  newShardedWriterMetrics(instrumentOpts.MetricsScope()),
 	}
 	w.shardFn = w.Shard
 	w.randFn = w.rand.Float64
