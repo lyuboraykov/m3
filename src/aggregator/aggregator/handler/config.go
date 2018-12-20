@@ -75,6 +75,7 @@ func (c FlushHandlerConfiguration) NewHandler(
 		handlers       = make([]Handler, 0, len(c.Handlers))
 		sharderRouters = make([]SharderRouter, 0, len(c.Handlers))
 		store          kv.Store
+		err            error
 	)
 	if c.TrafficControlKVOverride != nil {
 		kvOpts, err := c.TrafficControlKVOverride.NewOverrideOptions()
@@ -91,7 +92,7 @@ func (c FlushHandlerConfiguration) NewHandler(
 			return nil, err
 		}
 		if hc.DynamicBackend != nil {
-			err := hc.DynamicBackend.newHandler(
+			handlers, sharderRouters, err = hc.DynamicBackend.newHandler(
 				handlers,
 				sharderRouters,
 				cs,
@@ -227,7 +228,7 @@ func (c *dynamicBackendConfiguration) newHandler(
 	store kv.Store,
 	cfg *writerConfiguration,
 	instrumentOpts instrument.Options,
-) error {
+) ([]Handler, []SharderRouter, error) {
 	if c.ProtobufEnabled != nil && *c.ProtobufEnabled {
 		h, err := c.newProtobufHandler(
 			cs,
@@ -235,10 +236,10 @@ func (c *dynamicBackendConfiguration) newHandler(
 			instrumentOpts,
 		)
 		if err != nil {
-			return err
+			return nil, nil, err
 		}
 		handlers = append(handlers, h)
-		return nil
+		return handlers, sharderRouters, nil
 	}
 
 	sharderRouter, err := c.NewSharderRouter(
@@ -247,10 +248,10 @@ func (c *dynamicBackendConfiguration) newHandler(
 		instrumentOpts,
 	)
 	if err != nil {
-		return err
+		return nil, nil, err
 	}
 	sharderRouters = append(sharderRouters, sharderRouter)
-	return nil
+	return handlers, sharderRouters, nil
 }
 
 func (c *dynamicBackendConfiguration) newProtobufHandler(

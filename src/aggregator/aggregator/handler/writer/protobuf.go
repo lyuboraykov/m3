@@ -22,7 +22,6 @@ package writer
 
 import (
 	"errors"
-	"fmt"
 	"math/rand"
 
 	"github.com/m3db/m3/src/metrics/encoding/protobuf"
@@ -101,10 +100,8 @@ func NewProtobufWriter(
 }
 
 func (w *protobufWriter) Write(mp aggregated.ChunkedMetricWithStoragePolicy) error {
-	fmt.Println("write")
 	if w.closed {
 		w.metrics.writerClosed.Inc(1)
-		fmt.Println(errWriterClosed)
 		return errWriterClosed
 	}
 	var encodeNanos int64
@@ -114,17 +111,14 @@ func (w *protobufWriter) Write(mp aggregated.ChunkedMetricWithStoragePolicy) err
 	m, shard := w.prepare(mp)
 	if err := w.encoder.Encode(m, encodeNanos); err != nil {
 		w.metrics.encodeErrors.Inc(1)
-		fmt.Println(err)
 		return err
 	}
 
 	w.metrics.encodeSuccess.Inc(1)
 	if err := w.p.Produce(newMessage(shard, w.encoder.Buffer())); err != nil {
 		w.metrics.routeErrors.Inc(1)
-		fmt.Println(err)
 		return err
 	}
-	fmt.Println("success")
 	w.metrics.routeSuccess.Inc(1)
 	return nil
 }
